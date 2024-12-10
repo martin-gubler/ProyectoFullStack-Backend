@@ -17,8 +17,8 @@ class UserRepository{
         })
     }
     
-    static async findUserById (user_id){
-        return User.findById(user_id)
+    static async findUserById (receiver_id){
+        return User.findById(receiver_id)
     }
 
     static async findUserByUsername (name){
