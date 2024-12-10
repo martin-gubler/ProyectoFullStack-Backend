@@ -7,6 +7,6 @@ const contactRouter = express.Router();
 
 contactRouter.post('/add', verifyTokenMiddleware(), addContact)
 contactRouter.get('/', verifyTokenMiddleware(), getContacts)
-contactRouter.get('/InfoContacto/:receiver_id', verifyTokenMiddleware(), getInfoContacto)
+contactRouter.get('/InfoContacto/:user_id', verifyTokenMiddleware(), getInfoContacto)
 
 export default contactRouter

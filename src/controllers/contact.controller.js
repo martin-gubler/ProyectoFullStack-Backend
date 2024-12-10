@@ -96,9 +96,9 @@ const getContacts = async (req, res) => {
 
 const getInfoContacto = async (req, res) => {
     try{
-        const { user_id }= req.params
+        const { receiver_id }= req.params
         
-        const user = await UserRepository.findUserById(user_id)
+        const user = await UserRepository.findUserById(receiver_id)
         if(!user){
             return res.status(404).json({
                 ok: false,
