@@ -22,8 +22,7 @@ export const verifyTokenMiddleware = (roles_permitidos = []) => {
                 .build()
                 return res.status(401).json(response)
             }
-            //ejemplo de acces token:'Bearer fasdjklsdfkjlfsjkldfsjkl' = ['Barer', 'fasgadgsdfdgasfsa'] => arr[1] 
-            //split para partir un string en 2 valores de un array
+
             const access_token = auth_header.split(' ')[1]
             if(!access_token){
                 const response = new ResponseBuilder()

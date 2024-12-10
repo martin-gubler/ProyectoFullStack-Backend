@@ -142,9 +142,7 @@ export const verifyMailValidationTokenController = async (req, res) => {
             .build()
             return res.status(400).json(response);
         }
-        /* Verificamos la firma el token, debe ser la misma que mi clave secreta, 
-        eso asegura que este token sea emitido por mi servidor */
-        //Si fallara la lectura/verificacion/expiracion  hara un throw
+ 
         const decoded = jwt.verify(verification_token, ENVIROMENT.JWT_SECRET)
         const user = await User.findOne({email: decoded.email})
         if(!user){
@@ -165,9 +163,9 @@ export const verifyMailValidationTokenController = async (req, res) => {
             .build();
         return res.status(200).json(response);
         }
-        //En caso de pasar las validaciones
+
         user.emailVerified = true
-       /*  user.verificationToken = undefined */
+
 
         await user.save()
         const response = new ResponseBuilder()
@@ -213,7 +211,7 @@ export const loginController = async (req, res) => {
         if(!user.emailVerified){
             const response = new ResponseBuilder()
             .setOk(false)
-            .setStatus(403)//Contenido prohibiddo para usuarios que no tengan su email verificao
+            .setStatus(403)
             .setMessage('El email no verificado')
             .setPayload({
                 detail:'Porfavor, verifica tu correo electronico antes de iniciar sesion'

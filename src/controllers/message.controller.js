@@ -7,9 +7,6 @@ const createMessage = async (req, res) => {
         const user_id = req.user.id
         const {receiver_id} = req.params;
         const {content} = req.body
-        console.log('Request params:', req.params)
-        console.log('Request body:', req.body); // Verifica que el body llega correctamente
-        console.log('User ID createMessage:', user_id)
 
         if (!content) {
             return res.status(400).json({
@@ -21,9 +18,6 @@ const createMessage = async (req, res) => {
 
         const new_message = await MessageRepository.createMessage({author: user_id, receiver: receiver_id, content: content})
 
-        //Podrian retornar toda la conversacion
-
-        //const conversation = await MessageRepository.findMessagesBetweenUsers(user_id, receiver_id)
         return res.status(201).json({
             ok: true,
             status: 201,

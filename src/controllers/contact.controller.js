@@ -94,36 +94,4 @@ const getContacts = async (req, res) => {
 }
 
 
-const getInfoContacto = async (req, res) => {
-    try{
-        const { receiver_id }= req.params
-        
-        const user = await UserRepository.findUserById(receiver_id)
-        if(!user){
-            return res.status(404).json({
-                ok: false,
-                status: 404,
-                message: 'User not found'
-            })
-        }
-
-        return res.status(200).json({
-            ok: true,
-            status: 200,
-            message: 'Contact found',
-            data: {
-                name: user.name,
-                profilePicture: user.profilePicture
-            }
-        })  
-    }
-    catch(error){
-        console.error(error)
-        return res.status(500).json({
-            ok: false,
-            status: 500,
-            message: 'Internal server error'
-        })
-    }
-}
-export {addContact, getContacts, getInfoContacto}
+export {addContact, getContacts}

@@ -9,7 +9,6 @@ const sendEmail = async (options) => {
         console.error('Error al enviar mail', error)
         //Para que la funcion que invoque a esta funcion tambien le salte el error
         throw error
-
     }
 }
 sendEmail({
