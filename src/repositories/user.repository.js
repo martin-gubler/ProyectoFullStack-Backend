@@ -16,10 +16,10 @@ class UserRepository{
             }
         })
     }
+    
     static async findUserById (user_id){
         return User.findById(user_id)
     }
-
 
     static async findUserByUsername (name){
         return User.findOne({name: name})
