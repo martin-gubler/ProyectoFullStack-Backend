@@ -73,20 +73,14 @@ export const registerUserController = async (req, res) => {
         const verificationToken = jwt.sign({email: email}, ENVIROMENT.JWT_SECRET, {
             expiresIn: '1d'
         })
-        const url_verification =`${ENVIROMENT.URL_FRONT}/verify/${verificationToken}`
         await sendEmail({
             to: email,
             subject: 'verificacion de mail con token',
             html: `
             <h1>Verificacion</h1>
             <p>Da click en el boton de abajo para verificar</p>
-            <a 
-                style="background-color: black;
-                color: white; 
-                padding: 5px; 
-                border-radius: 5px;"
-                href="${url_verification}"
-            >Click aqui para verificar</a>
+            <p>Utiliza el siguiente token para verificar tu email:</p>
+            <p style="font-weight: bold;">${verificationToken}</p>
             `
         })
 
@@ -130,67 +124,67 @@ export const registerUserController = async (req, res) => {
 
 
 export const verifyMailValidationTokenController = async (req, res) => {
-    try{    
-        const {verification_token} = req.params
-        if(!verification_token){
+    try {
+        const { verification_token } = req.body; 
+        if (!verification_token) {
             const response = new ResponseBuilder()
-            .setOk(false)
-            .setStatus(400)
-            .setPayload({
-                detail: 'Falta enviar token'
-            })
-            .build()
+                .setOk(false)
+                .setStatus(400)
+                .setPayload({
+                    detail: 'Falta enviar token',
+                })
+                .build();
             return res.status(400).json(response);
         }
- 
-        const decoded = jwt.verify(verification_token, ENVIROMENT.JWT_SECRET)
-        const user = await User.findOne({email: decoded.email})
-        if(!user){
+
+        const decoded = jwt.verify(verification_token, ENVIROMENT.JWT_SECRET); 
+        const user = await User.findOne({ email: decoded.email });
+
+        if (!user) {
             const response = new ResponseBuilder()
-            .setOk(false)
-            .setStatus(404)
+                .setOk(false)
+                .setStatus(404)
+                .setPayload({
+                    detail: 'Usuario no encontrado',
+                })
+                .build();
+            return res.status(404).json(response);
+        }
+
+        if (user.emailVerified) {
+            const response = new ResponseBuilder()
+                .setOk(true)
+                .setStatus(200)
+                .setMessage('El correo ya ha sido verificado previamente.')
+                .build();
+            return res.status(200).json(response);
+        }
+
+        user.emailVerified = true;
+        await user.save();
+
+        const response = new ResponseBuilder()
+            .setOk(true)
+            .setMessage('Email verificado con éxito')
+            .setStatus(200)
             .setPayload({
-                detail: 'Usuario no encontrado'
+                message: 'Usuario validado',
             })
             .build();
-        return res.status(404).json(response);
-        }
-        if(user.emailVerified){
-            const response = new ResponseBuilder()
-            .setOk(true)
-            .setStatus(200)
-            .setMessage('El correo ya ha sido verificado previamente.')
-            .build();
         return res.status(200).json(response);
-        }
-
-        user.emailVerified = true
-
-
-        await user.save()
-        const response = new ResponseBuilder()
-        .setOk(true)
-        .setMessage('Email verificaddo con exito')
-        .setStatus(200)
-        .setPayload({
-            message: 'Usuario validado'
-        })
-        .build()
-        return res.status(200).json(response);
-    }
-    catch(error){
-        console.log(error);
+    } catch (error) {
+        console.error(error);
         const response = new ResponseBuilder()
             .setOk(false)
             .setStatus(500)
             .setMessage('Error interno del servidor')
             .setPayload({
-                detail: error.message
+                detail: error.message,
             })
             .build();
-        return res.status(500).json(response)
+        return res.status(500).json(response);
     }
-}
+};
 
 
 export const loginController = async (req, res) => {
