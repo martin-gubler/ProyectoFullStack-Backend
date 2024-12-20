@@ -73,14 +73,16 @@ export const registerUserController = async (req, res) => {
         const verificationToken = jwt.sign({email: email}, ENVIROMENT.JWT_SECRET, {
             expiresIn: '1d'
         })
+
+        const VerifyCode = `${verificationToken}`
+        
         await sendEmail({
             to: email,
             subject: 'verificacion de mail con token',
             html: `
-            <h1>Verificacion</h1>
-            <p>Da click en el boton de abajo para verificar</p>
-            <p>Utiliza el siguiente token para verificar tu email:</p>
-            <p style="font-weight: bold;">${verificationToken}</p>
+            <h1>Token de verificacion</h1>
+            <p>Copia el token de verificacion y verifica el mail antes de iniciar sesion</p>
+            <p style="font-weight: bold;">${VerifyCode}</p>
             `
         })
 
