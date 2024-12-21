@@ -74,7 +74,6 @@ export const registerUserController = async (req, res) => {
             expiresIn: '1d'
         })
 
-        const VerifyCode = `${verificationToken}`
         
         await sendEmail({
             to: email,
@@ -82,7 +81,7 @@ export const registerUserController = async (req, res) => {
             html: `
             <h1>Token de verificacion</h1>
             <p>Copia el token de verificacion y verifica el mail antes de iniciar sesion</p>
-            <p style="font-weight: bold;">${VerifyCode}</p>
+            <p style="font-weight: bold;">${verificationToken}</p>
             `
         })
 
@@ -126,8 +125,9 @@ export const registerUserController = async (req, res) => {
 
 
 export const verifyMailValidationTokenController = async (req, res) => {
+    const { verification_token } = req.body; 
     try {
-        const { verification_token } = req.body; 
+        
         if (!verification_token) {
             const response = new ResponseBuilder()
                 .setOk(false)
